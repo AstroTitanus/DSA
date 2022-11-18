@@ -33,6 +33,15 @@ class MyApp(QMainWindow, Ui_MainWindow):
     #  HELPERS  #
     #-----------#
     def open_file_dialog(self, file_format = 'All Files (*)'):
+        """Opens a file dialog where user can select a file to open.
+
+        Args:
+            file_format (str, optional): Which formats can user choose. Defaults to 'All Files (*)'.
+
+        Returns:
+            str: Path to the selected file. Returns None if no file was selected.
+        """
+
         options = QFileDialog.Options()
         file_path, _ = QFileDialog.getOpenFileName(self, "Select a file", "", file_format, options=options)
 
@@ -41,6 +50,15 @@ class MyApp(QMainWindow, Ui_MainWindow):
 
 
     def save_file_dialog(self, file_format = 'All Files (*)'):
+        """Opens a save file dialog where user can select where to save a file.
+
+        Args:
+            file_format (str, optional): Which formats can be the file saved in. Defaults to 'All Files (*)'.
+
+        Returns:
+            str: Path to a selected save location. Returns None if no location was selected.
+        """
+
         options = QFileDialog.Options()
         path, _ = QFileDialog.getSaveFileName(self, "Save file", "", file_format, options=options)
 
@@ -49,6 +67,12 @@ class MyApp(QMainWindow, Ui_MainWindow):
 
 
     def folder_dialog(self):
+        """Opens a folder dialog where user can select a folder.
+
+        Returns:
+            str: Path to selected folder. Returns None if no folder was selected.
+        """
+
         folder_path = QFileDialog.getExistingDirectory(self, 'Select directory')
 
         if folder_path:
@@ -56,6 +80,13 @@ class MyApp(QMainWindow, Ui_MainWindow):
     
 
     def message_popup(self, text, title='Error'):
+        """Opens an informative popup with defined text and title.
+
+        Args:
+            text (str): Text content of the popup.
+            title (str, optional): Title of the popup. Defaults to 'Error'.
+        """
+
         dlg = QMessageBox(self)
         dlg.setWindowTitle(title)
         dlg.setText(text)
@@ -67,6 +98,9 @@ class MyApp(QMainWindow, Ui_MainWindow):
     #  BUTTONS  #
     #-----------#
     def load_file(self):
+        """Handles Load File button in UI, loads file and prints info about it in fileInfo input.
+        """
+
         # Choose a file
         path = self.open_file_dialog('All Files (*)')
 
@@ -99,6 +133,9 @@ class MyApp(QMainWindow, Ui_MainWindow):
 
     
     def generate_keys(self):
+        """Generates new set of RSA keys and prints it in inputs privateKeyOut and publicKeyOut.
+        """
+
         rsa = RSA()
 
         # Set keys to text fields
@@ -110,6 +147,9 @@ class MyApp(QMainWindow, Ui_MainWindow):
     
 
     def save_keys(self):
+        """Saves generated RSA keys to a location given from folder_dialog to .priv and .pub files.
+        """
+
         # Check if rsa object exists
         if not self.rsa:
             self.message_popup('Only generated keys can be saved.')
@@ -143,6 +183,9 @@ class MyApp(QMainWindow, Ui_MainWindow):
 
     
     def load_private_key(self):
+        """Loads private RSA key from .priv file and prints it in privateKeyOut field.
+        """
+
         # Get priv key file location
         path = self.open_file_dialog('Private Key (*.priv);;All Files (*)')
 
@@ -170,6 +213,9 @@ class MyApp(QMainWindow, Ui_MainWindow):
 
 
     def load_public_key(self):
+        """Loads public RSA key from .pub file and prints it in publicKeyOut field.
+        """
+
         # Get priv key file location
         path = self.open_file_dialog('Public Key (*.pub);;All Files (*)')
 
@@ -197,6 +243,9 @@ class MyApp(QMainWindow, Ui_MainWindow):
 
 
     def sign_file(self):
+        """Signs loaded file with dsa library and saves it to a location given by user with save_file_dialog.
+        """
+
         # Check if file is loaded
         if self.file_path == None:
             self.message_popup('A file must be loaded before signing.')
@@ -217,6 +266,9 @@ class MyApp(QMainWindow, Ui_MainWindow):
 
 
     def check_signature(self):
+        """Checks if signature of loaded zip is valid with dsa lib and shows user validity status with message_popup.
+        """
+
         # Check if file is loaded
         if not self.file_path:
             self.message_popup('A file must be loaded before signing.')
@@ -238,9 +290,13 @@ class MyApp(QMainWindow, Ui_MainWindow):
             self.message_popup('Ooops, Something went wrong when checking the signature.')
             return
         
+        # Success popup
         if success:
-            self.message_popup('SUCCESS: SIGNATURE IS VALID')
+            self.message_popup('SUCCESS: SIGNATURE IS VALID', title='SUCCESS')
             return
+
+        # Failure popup
+        self.message_popup('FAILURE: SIGNATURE IS INVALID', title='FAILURE')
             
      
 if __name__ == "__main__":
