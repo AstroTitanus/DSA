@@ -276,6 +276,9 @@ class MyApp(QMainWindow, Ui_MainWindow):
         except:
             self.message_popup('Ooops, Something went wrong when signing the file.')
 
+        # Success popup
+        self.message_popup(f"Successfuly signed file and saved to {save_path}", 'SUCCESS')
+
 
     def check_signature(self):
         """Checks if signature of loaded zip is valid with dsa lib and shows user validity status with message_popup.
