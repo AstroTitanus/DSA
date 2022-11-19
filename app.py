@@ -133,7 +133,7 @@ class MyApp(QMainWindow, Ui_MainWindow):
 
     
     def generate_keys(self):
-        """Generates new set of RSA keys and prints it in inputs privateKeyOut and publicKeyOut.
+        """Generates new RSA keys, prints it to privateKeyOut, publicKeyOut, pOut and qOut.
         """
 
         rsa = RSA()
@@ -141,6 +141,10 @@ class MyApp(QMainWindow, Ui_MainWindow):
         # Set keys to text fields
         self.privateKeyOut.setText(f"{rsa.private_key[0]}, {rsa.private_key[1]}")
         self.publicKeyOut.setText(f"{rsa.public_key[0]}, {rsa.public_key[1]}")
+
+        # Set p and q to text fieds
+        self.pOut.setText(str(rsa.primes['p']))
+        self.qOut.setText(str(rsa.primes['q']))
 
         # Set object as class variable for saving keys
         self.rsa = rsa
@@ -211,6 +215,10 @@ class MyApp(QMainWindow, Ui_MainWindow):
             self.message_popup(f"Wrong key format in {path}")
             return
 
+        # Remove p and q values since they would be misleading
+        self.pOut.setText('')
+        self.qOut.setText('')
+
 
     def load_public_key(self):
         """Loads public RSA key from .pub file and prints it in publicKeyOut field.
@@ -240,6 +248,10 @@ class MyApp(QMainWindow, Ui_MainWindow):
         except:
             self.message_popup(f"Wrong key format in {path}")
             return
+        
+        # Remove p and q values since they would be misleading
+        self.pOut.setText('')
+        self.qOut.setText('')
 
 
     def sign_file(self):
