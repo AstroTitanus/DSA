@@ -1,5 +1,6 @@
 import hashlib
 import os
+from shutil import rmtree
 from zipfile import ZipFile
 from lib.rsa import RSA
 
@@ -119,23 +120,26 @@ class DSA:
             # Save signed file name for getting hash
             signed_file_name = [name for name in zip.namelist() if name != 'signature.sign'][0]
             
+            # Obscure name of extract folder so no user files would be accidentaly deleted.
+            extract_folder_path = os.path.join(dir_path, 'temp_dsa_82520735')
             # Extract valid zip
-            zip.extractall(path=dir_path)
+            zip.extractall(path=extract_folder_path)
         
         # Remove now unnecessary zip if want to
         if delete_zip:
             os.remove(os.path.abspath(zip_path))
 
         # Get file hash
-        file_hash = cls.__file_hash(os.path.join(dir_path, signed_file_name))
+        file_hash = cls.__file_hash(os.path.join(extract_folder_path, signed_file_name))
 
         # Get encrypted hash
-        with open(os.path.join(dir_path, 'signature.sign'), 'r') as f:
+        with open(os.path.join(extract_folder_path, 'signature.sign'), 'r') as f:
             encrypted_file_hash = f.read().replace('RSA_SHA3-512 ', '')
         
-        # Remove unzipped files
-        os.remove(os.path.join(dir_path, 'signature.sign'))
-        os.remove(os.path.join(dir_path, signed_file_name))
+        # Remove unzipped folder
+        rmtree(extract_folder_path)
+        # os.remove(os.path.join(extract_folder_path, 'signature.sign'))
+        # os.remove(os.path.join(extract_folder_path, signed_file_name))
         
         # Decrypt encrypted hash
         rsa = RSA()
