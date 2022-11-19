@@ -138,8 +138,6 @@ class DSA:
         
         # Remove unzipped folder
         rmtree(extract_folder_path)
-        # os.remove(os.path.join(extract_folder_path, 'signature.sign'))
-        # os.remove(os.path.join(extract_folder_path, signed_file_name))
         
         # Decrypt encrypted hash
         rsa = RSA()
