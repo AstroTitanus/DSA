@@ -8,8 +8,6 @@ from lib.rsa import RSA
 from lib.dsa import DSA
  
 qtCreatorFile = os.path.join('ui', 'dsa.ui')
-# qtCreatorFile = 'dsa.ui'
- 
 Ui_MainWindow, QtBaseClass = uic.loadUiType(qtCreatorFile)
 
  
